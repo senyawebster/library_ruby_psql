@@ -34,16 +34,16 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: author_name; Type: TABLE; Schema: public; Owner: Guest
+-- Name: authors; Type: TABLE; Schema: public; Owner: Guest
 --
 
-CREATE TABLE author_name (
+CREATE TABLE authors (
     id integer NOT NULL,
     author character varying
 );
 
 
-ALTER TABLE author_name OWNER TO "Guest";
+ALTER TABLE authors OWNER TO "Guest";
 
 --
 -- Name: author_name_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
@@ -63,21 +63,21 @@ ALTER TABLE author_name_id_seq OWNER TO "Guest";
 -- Name: author_name_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
 --
 
-ALTER SEQUENCE author_name_id_seq OWNED BY author_name.id;
+ALTER SEQUENCE author_name_id_seq OWNED BY authors.id;
 
 
 --
--- Name: book; Type: TABLE; Schema: public; Owner: Guest
+-- Name: book_author; Type: TABLE; Schema: public; Owner: Guest
 --
 
-CREATE TABLE book (
+CREATE TABLE book_author (
     id integer NOT NULL,
     title_id integer,
     author_id integer
 );
 
 
-ALTER TABLE book OWNER TO "Guest";
+ALTER TABLE book_author OWNER TO "Guest";
 
 --
 -- Name: book_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
@@ -97,20 +97,20 @@ ALTER TABLE book_id_seq OWNER TO "Guest";
 -- Name: book_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
 --
 
-ALTER SEQUENCE book_id_seq OWNED BY book.id;
+ALTER SEQUENCE book_id_seq OWNED BY book_author.id;
 
 
 --
--- Name: book_title; Type: TABLE; Schema: public; Owner: Guest
+-- Name: titles; Type: TABLE; Schema: public; Owner: Guest
 --
 
-CREATE TABLE book_title (
+CREATE TABLE titles (
     id integer NOT NULL,
     title character varying
 );
 
 
-ALTER TABLE book_title OWNER TO "Guest";
+ALTER TABLE titles OWNER TO "Guest";
 
 --
 -- Name: book_title_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
@@ -130,7 +130,7 @@ ALTER TABLE book_title_id_seq OWNER TO "Guest";
 -- Name: book_title_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
 --
 
-ALTER SEQUENCE book_title_id_seq OWNED BY book_title.id;
+ALTER SEQUENCE book_title_id_seq OWNED BY titles.id;
 
 
 --
@@ -205,21 +205,14 @@ ALTER SEQUENCE patrons_id_seq OWNED BY patrons.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY author_name ALTER COLUMN id SET DEFAULT nextval('author_name_id_seq'::regclass);
+ALTER TABLE ONLY authors ALTER COLUMN id SET DEFAULT nextval('author_name_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY book ALTER COLUMN id SET DEFAULT nextval('book_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
---
-
-ALTER TABLE ONLY book_title ALTER COLUMN id SET DEFAULT nextval('book_title_id_seq'::regclass);
+ALTER TABLE ONLY book_author ALTER COLUMN id SET DEFAULT nextval('book_id_seq'::regclass);
 
 
 --
@@ -237,11 +230,10 @@ ALTER TABLE ONLY patrons ALTER COLUMN id SET DEFAULT nextval('patrons_id_seq'::r
 
 
 --
--- Data for Name: author_name; Type: TABLE DATA; Schema: public; Owner: Guest
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
-COPY author_name (id, author) FROM stdin;
-\.
+ALTER TABLE ONLY titles ALTER COLUMN id SET DEFAULT nextval('book_title_id_seq'::regclass);
 
 
 --
@@ -252,10 +244,18 @@ SELECT pg_catalog.setval('author_name_id_seq', 1, false);
 
 
 --
--- Data for Name: book; Type: TABLE DATA; Schema: public; Owner: Guest
+-- Data for Name: authors; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY book (id, title_id, author_id) FROM stdin;
+COPY authors (id, author) FROM stdin;
+\.
+
+
+--
+-- Data for Name: book_author; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY book_author (id, title_id, author_id) FROM stdin;
 \.
 
 
@@ -263,15 +263,7 @@ COPY book (id, title_id, author_id) FROM stdin;
 -- Name: book_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('book_id_seq', 1, false);
-
-
---
--- Data for Name: book_title; Type: TABLE DATA; Schema: public; Owner: Guest
---
-
-COPY book_title (id, title) FROM stdin;
-\.
+SELECT pg_catalog.setval('book_id_seq', 2, true);
 
 
 --
@@ -312,10 +304,18 @@ SELECT pg_catalog.setval('patrons_id_seq', 1, false);
 
 
 --
+-- Data for Name: titles; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY titles (id, title) FROM stdin;
+\.
+
+
+--
 -- Name: author_name_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY author_name
+ALTER TABLE ONLY authors
     ADD CONSTRAINT author_name_pkey PRIMARY KEY (id);
 
 
@@ -323,7 +323,7 @@ ALTER TABLE ONLY author_name
 -- Name: book_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY book
+ALTER TABLE ONLY book_author
     ADD CONSTRAINT book_pkey PRIMARY KEY (id);
 
 
@@ -331,7 +331,7 @@ ALTER TABLE ONLY book
 -- Name: book_title_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY book_title
+ALTER TABLE ONLY titles
     ADD CONSTRAINT book_title_pkey PRIMARY KEY (id);
 
 
@@ -355,16 +355,16 @@ ALTER TABLE ONLY patrons
 -- Name: book_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY book
-    ADD CONSTRAINT book_author_id_fkey FOREIGN KEY (author_id) REFERENCES author_name(id);
+ALTER TABLE ONLY book_author
+    ADD CONSTRAINT book_author_id_fkey FOREIGN KEY (author_id) REFERENCES authors(id);
 
 
 --
 -- Name: book_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: Guest
 --
 
-ALTER TABLE ONLY book
-    ADD CONSTRAINT book_title_id_fkey FOREIGN KEY (title_id) REFERENCES book_title(id);
+ALTER TABLE ONLY book_author
+    ADD CONSTRAINT book_title_id_fkey FOREIGN KEY (title_id) REFERENCES titles(id);
 
 
 --
@@ -372,7 +372,7 @@ ALTER TABLE ONLY book
 --
 
 ALTER TABLE ONLY checkouts
-    ADD CONSTRAINT checkouts_book_id_fkey FOREIGN KEY (book_id) REFERENCES book(id);
+    ADD CONSTRAINT checkouts_book_id_fkey FOREIGN KEY (book_id) REFERENCES book_author(id);
 
 
 --

@@ -1,6 +1,7 @@
 require('spec_helper')
 
 describe(Book) do
+
   describe(".all") do
     it("is empty at first") do
       expect(Book.all()).to(eq([]))
@@ -21,12 +22,13 @@ describe(Book) do
     end
   end
 
-  describe("#book_id") do
+  describe("#book_author") do
     it('tells you the id of the book') do
       id = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => 1)
       expect(id.book_id()).to(eq(1))
     end
   end
+
   describe('#save') do
     it('will add a book to the database') do
       new_book = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => nil)
@@ -34,4 +36,5 @@ describe(Book) do
       expect(Book.all()).to(eq([new_book]))
     end
   end
+
 end

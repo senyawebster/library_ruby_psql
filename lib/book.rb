@@ -8,7 +8,7 @@ class Book
   end
 
   def self.all
-    returned_books = DB.exec('SELECT * FROM book;')
+    returned_books = DB.exec('SELECT * FROM book_author;')
     books = []
     returned_books.each() do |book|
       book_title = book.fetch('book_title')
@@ -20,7 +20,7 @@ class Book
   end
 
   def save
-    result = DB.exec("INSERT INTO book (title_id, author_id) VALUES (#{@book_title}, #{@author_name}) RETURNING id;")
+    result = DB.exec("INSERT INTO book_author (title_id, author_id) VALUES (#{@book_title}, #{@author_name}) RETURNING id;")
     @id = result.first().fetch('id').to_i
   end
 
