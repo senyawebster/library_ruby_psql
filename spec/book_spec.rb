@@ -8,32 +8,33 @@ describe(Book) do
     end
   end
 
-  describe("#book_title") do
-    it("tells you the book's title") do
-      book = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => 1)
-      expect(book.book_title()).to(eq('Bible'))
+  describe("#id") do
+    it("returns a primary key for a book w/ author & title") do
+      book = Book.new(:id => 1, :title_id => 2, :author_id => 3)
+      expect(book.id()).to(eq(1))
     end
   end
 
-  describe("#author_name") do
-    it("tells you author_name") do
-      author = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => 1)
-      expect(author.author_name()).to(eq("God"))
+  describe("#title_id") do
+    it("returns the title of a book") do
+      book = Book.new(:id => 1, :title_id => 2, :author_id => 3)
+      expect(book.title_id()).to(eq(2))
     end
   end
 
-  describe("#book_author") do
-    it('tells you the id of the book') do
-      id = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => 1)
-      expect(id.book_id()).to(eq(1))
+  describe("#author_id") do
+    it('tells you the id of the author') do
+      book = Book.new(:id => 1, :title_id => 2, :author_id => 3)
+      expect(book.author_id()).to(eq(3))
     end
   end
 
   describe('#save') do
-    it('will add a book to the database') do
-      new_book = Book.new(:book_title => 'Bible', :author_name => 'God', :book_id => nil)
-      new_book.save
-      expect(Book.all()).to(eq([new_book]))
+    it('will save a book to the database') do
+
+      book = Book.new(:id => 1, :title_id => 2, :author_id => 3)
+      book.save()
+      expect(Book.all()).to(eq([book]))
     end
   end
 
