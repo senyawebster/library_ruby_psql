@@ -20,7 +20,7 @@ class Book
   end
 
   def save
-    result = DB.exec("INSERT INTO author_title (id, title, author_id) VALUES (#{@id}, #{@title}, #{@author_id}) RETURNING id;")
+    result = DB.exec("INSERT INTO author_title (id, title, author_id) VALUES (#{@id}, '#{@title}', #{@author_id}) RETURNING id;")
     @id = result.first().fetch('id').to_i
   end
 
