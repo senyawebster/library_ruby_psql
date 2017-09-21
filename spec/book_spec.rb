@@ -31,7 +31,7 @@ describe(Book) do
 
   describe('#save') do
     it('will save a book to the database') do
-      book = Book.new(:id => 1, :title => 2, :author_id => 3)
+      book = Book.new(:id => 1, :title => 1, :author_id => 1)
       book.save()
       expect(Book.all()).to(eq([book]))
     end
